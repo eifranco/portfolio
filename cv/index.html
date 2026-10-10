@@ -11,103 +11,136 @@
     <link rel="stylesheet" href="../style.css">
 </head>
 
-<body>
+<body class="cv">
 
     <!-- Navigation Menu -->
     <nav>
     <a href="../">Home</a>
     <a href="../projects/">Projects</a>
     <a href="../contact/">Contact</a>
-    <a href="./">CV</a>
+    <a href="./" class="current">CV</a>
     <a href="https://github.com/eifranco" target="_blank">GitHub</a>
     </nav>
 
 
-    <h1>Emiliano Franco</h1>
-
+    <div class="cv-layout">
+  <aside class="cv-sidebar">
+    <img
+    class="cv-photo"
+    src="../images/profile.jpg"
+    alt="Emiliano Franco"
+    >
 
     <section>
-        <h2>Education</h2>
+    <h2>Contact</h2>
+    <p>
+        <a href="mailto:eifranco@ucsd.edu">eifranco@ucsd.edu</a>
+    </p>
 
-        <article>
-            <h3>El Camino College</h3>
-
-            <p>AS Transfer Degree</p>
-
-            <p>
-                <time datetime="2022">2022</time>
-                -
-                <time datetime="2025">2025</time>
-            </p>
-        </article>
-
-        <article>
-            <h3>UCSD</h3>
-
-            <p>Data Science</p>
-
-            <p>
-                <time datetime="2025">2025</time>
-                -
-                Present
-            </p>
-        </article>
+    <p>
+        <a href="https://github.com/eifranco" target="_blank">GitHub</a>
+    </p>
     </section>
 
-
     <section>
-        <h2>Experience</h2>
+      <h2>Skills</h2>
 
-        <article>
-            <h3>Retail Associate</h3>
-
-            <p>
-        <a href="https://www.fastretailing.com/eng/" target="_blank">
-        Uniqlo
-        </a>
-        Del Amo
-        </p>
-
-            <p>
-                <time datetime="2024-03">March 2024</time>
-                -
-                Present
-            </p>
-        </article>
+      <ul>
+        <li>Python</li>
+        <li>HTML</li>
+        <li>Data Analysis</li>
+        <li>Data Visualization</li>
+      </ul>
     </section>
-
-
     <section>
-        <h2>Projects</h2>
-
-        <article>
-            <h3>Data Analysis Project</h3>
-
-            <p>
-                Analyzed a dataset using Python and created
-                visualizations to communicate findings.
-            </p>
-
-            <p>
-                <a href="../projects/index.html">
-                    View my projects
-                </a>
-            </p>
-        </article>
-    </section>
-
-
-    <section>
-        <h2>Skills</h2>
+        <h2>Interests</h2>
 
         <ul>
-            <li>Python</li>
-            <li>HTML</li>
-            <li>Data Analysis</li>
-            <li>Data Visualization</li>
+            <li>Soccer</li>
+            <li>Hiking</li>
+            <li>Chess</li>
+            <li>Reading</li>
         </ul>
     </section>
+  </aside>
 
+  <main class="cv-main">
+    <h1>Emiliano Franco</h1>
+    <p class="cv-title">Undergraduate Student</p>
+    <section>
+        <h2>Profile</h2>
+
+        <p>
+            I am a second-year transfer student studying Data Science
+            at UC San Diego. I am interested in using Python, data
+            analysis, and visualization to explore questions and
+            communicate findings.
+        </p>
+    </section>
+
+    <section>
+      <h2>Experience</h2>
+
+      <article>
+        <h3>Retail Associate</h3>
+
+        <p>
+          <a href="https://www.fastretailing.com/eng/" target="_blank">
+            Uniqlo
+          </a>
+          Del Amo
+        </p>
+
+        <p>
+          <time datetime="2024-03">March 2024</time>
+          – Present
+        </p>
+      </article>
+    </section>
+
+    <section>
+      <h2>Education</h2>
+
+      <article>
+        <h3>El Camino College</h3>
+        <p>AS Transfer Degree</p>
+
+        <p>
+          <time datetime="2022">2022</time>
+          –
+          <time datetime="2025">2025</time>
+        </p>
+      </article>
+
+      <article>
+        <h3>UCSD</h3>
+        <p>Data Science</p>
+
+        <p>
+          <time datetime="2025">2025</time>
+          – Present
+        </p>
+      </article>
+    </section>
+
+    <section>
+      <h2>Projects</h2>
+
+      <article>
+        <h3>Data Analysis Project</h3>
+
+        <p>
+          Analyzed a dataset using Python and created
+          visualizations to communicate findings.
+        </p>
+
+        <p>
+          <a href="../projects/">View my projects</a>
+        </p>
+      </article>
+    </section>
+  </main>
+</div>
 </body>
 
 </html>
