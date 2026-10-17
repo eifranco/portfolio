@@ -4,16 +4,6 @@ function $$(selector, context = document) {
   return Array.from(context.querySelectorAll(selector));
 }
 
-let navLinks = $$('nav a');
-
-let currentLink = navLinks.find(
-  (a) => a.host === location.host && a.pathname === location.pathname
-);
-
-if (currentLink) {
-  currentLink.classList.add('current');
-}
-
 let pages = [
   { url: '', title: 'Home' },
   { url: 'projects/', title: 'Projects' },
@@ -28,7 +18,7 @@ document.body.prepend(nav);
 const BASE_PATH =
   location.hostname === 'localhost' || location.hostname === '127.0.0.1'
     ? '/'
-    : '/https://github.com/eifranco/portfolio/';
+    : '/portfolio/';
 
 for (let p of pages) {
   let url = p.url;
@@ -38,11 +28,54 @@ for (let p of pages) {
     url = BASE_PATH + url;
   }
 
-  nav.insertAdjacentHTML(
-    'beforeend',
-    `<a href="${url}">${title}</a>`
-  );
+  let a = document.createElement('a');
+  a.href = url;
+  a.textContent = title;
+
+  if (a.host === location.host && a.pathname === location.pathname) {
+    a.classList.add('current');
+  }
+
+  if (a.host !== location.host) {
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+  }
+
+  nav.append(a);
 }
 
-console.log(navLinks);
-console.log(currentLink);
+document.body.insertAdjacentHTML(
+  'afterbegin',
+  `
+  <label class="color-scheme">
+    Theme:
+    <select>
+      <option value="light dark">Automatic</option>
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+    </select>
+  </label>
+  `
+);
+
+let select = document.querySelector('.color-scheme select');
+
+function setColorScheme(colorScheme) {
+  document.documentElement.style.setProperty(
+    'color-scheme',
+    colorScheme
+  );
+
+  select.value = colorScheme;
+}
+
+if ('colorScheme' in localStorage) {
+  setColorScheme(localStorage.colorScheme);
+}
+
+select.addEventListener('input', function (event) {
+  let colorScheme = event.target.value;
+
+  setColorScheme(colorScheme);
+  localStorage.colorScheme = colorScheme;
+});
