@@ -1,26 +1,31 @@
 [
-    {
-        "title": "Lorem ipsum dolor sit.",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos vitae delectus minus inventore nulla quo, consequuntur, eveniet porro deserunt, aspernatur natus esse nisi quia cumque eaque totam iusto nostrum fuga."
+        {
+    "title": "GroceryDB: Ultra-Processed Foods",
+    "year": 2026,
+    "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+    "description": "Used pandas and Plotly to compare the percentage of ultra-processed products across Target, Walmart, and Whole Foods in ten selected food categories."
     },
     {
-        "title": "Adipisci asperiores vitae reprehenderit!",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Neque, quia ipsa, voluptatem doloremque tenetur incidunt suscipit ducimus omnis sequi sint quod cupiditate itaque dolorum modi at, sed repellendus a soluta? Corporis, magni eligendi adipisci dolorem repellat incidunt deleniti!"
+    "title": "Police Misconduct Visualization",
+    "year": 2026,
+    "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+    "description": "Analyzed disciplinary recommendations for substantiated NYPD misconduct allegations and explored how filtering, color, and framing influence the interpretation of a visualization."
     },
     {
-        "title": "Perspiciatis repudiandae quos fuga.",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Quo ipsam laborum at rerum. Hic eum repellendus nihil dignissimos a quia fuga totam quam corporis? Facere, provident ipsa quibusdam laboriosam ipsum voluptas perferendis illo, iusto consectetur esse enim adipisci."
+    "title": "Personal Portfolio Website",
+    "year": 2026,
+    "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+    "description": "Built a responsive portfolio using HTML, CSS, and JavaScript, featuring a personalized CV, automatically generated navigation, persistent theme preferences, project templates, and GitHub API statistics."
     },
     {
-        "title": "Rerum molestiae sunt nemo!",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Sit, cum necessitatibus nisi nam esse maxime iusto alias aliquam placeat architecto, ipsam ex. Commodi, debitis tempore explicabo illo odio cumque facilis. Repellendus autem quas consectetur a tempore necessitatibus neque."
+    "title": "Power Outage Analysis",
+    "year": 2025,
+    "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+    "description": "Investigated U.S. power outages using data cleaning, exploratory visualization, missingness analysis, and hypothesis testing, then developed regression models to predict outage duration."
     },
     {
         "title": "Odio dolore necessitatibus et!",
+        "year": 2024,
         "image": "https://vis-society.github.io/labs/2/images/empty.svg",
         "description": "Blanditiis eos veniam possimus earum accusantium distinctio cum voluptas autem ullam ea esse corporis porro perspiciatis nemo iusto vel, accusamus sunt! Laborum molestiae illum soluta veniam perferendis quisquam cupiditate mollitia."
     },
