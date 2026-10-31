@@ -169,3 +169,48 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 2em;
   font-weight: bold;
 }
+
+.project-year {
+  color: color-mix(in oklch, canvastext 60%, canvas);
+  font-family: Baskerville, serif;
+  font-variant-numeric: oldstyle-nums;
+}
+
+#projects-plot {
+  max-width: 20em;
+  margin-block: 2em;
+  overflow: visible;
+}
+
+.legend {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9em, 1fr));
+  gap: 1em;
+  list-style: none;
+  border: 1px solid color-mix(in oklch, canvastext 20%, canvas);
+  padding: 1em;
+  margin-block: 1em;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.swatch {
+  display: inline-block;
+  width: 1em;
+  aspect-ratio: 1 / 1;
+  background-color: var(--color);
+  border-radius: 0.2em;
+  flex-shrink: 0;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  gap: 2em;
+  flex-wrap: wrap;
+}
