@@ -236,3 +236,33 @@ path {
   gap: 2em;
   flex-wrap: wrap;
 }
+
+dl.stats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5em 1em;
+}
+
+.stats dt {
+  grid-row: 1;
+  color: gray;
+  font-size: 0.9em;
+}
+
+.stats dd {
+  grid-row: 2;
+  margin: 0;
+  font-size: 2em;
+  font-weight: bold;
+}
+
+@media (max-width: 600px) {
+  dl.stats {
+    grid-template-columns: 1fr auto;
+  }
+
+  .stats dt,
+  .stats dd {
+    grid-row: auto;
+  }
+}
