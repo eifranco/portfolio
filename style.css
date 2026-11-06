@@ -266,3 +266,33 @@ dl.stats {
     grid-row: auto;
   }
 }
+
+.gridlines line {
+  stroke: currentColor;
+  stroke-opacity: 0.1;
+}
+
+.gridlines path {
+  display: none;
+}
+
+dl.info dt,
+dl.info dd {
+  margin: 0;
+}
+
+.tooltip {
+  position: fixed;
+  top: 1em;
+  left: 1em;
+}
+
+circle {
+  transition: 200ms;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+circle:hover {
+  transform: scale(1.5);
+}
