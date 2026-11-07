@@ -76,7 +76,7 @@ function renderScatterPlot(data, commits) {
     height: height - margin.top - margin.bottom,
     };
 
-  const svg = d3
+const svg = d3
     .select('#chart')
     .append('svg')
     .attr('viewBox', `0 0 ${width} ${height}`)
@@ -92,7 +92,6 @@ const yScale = d3
   .scaleLinear()
   .domain([0, 24])
   .range([usableArea.bottom, usableArea.top]);
-  const dots = svg.append('g').attr('class', 'dots');
 
   const gridlines = d3
   .axisLeft(yScale)
@@ -120,22 +119,139 @@ svg
   .append('g')
   .attr('transform', `translate(${usableArea.left}, 0)`)
   .call(yAxis);
+  const [minLines, maxLines] = d3.extent(
+  commits,
+  (d) => d.totalLines
+);
+
+const rScale = d3
+  .scaleSqrt()
+  .domain([minLines, maxLines])
+  .range([5, 15]);
+
+const sortedCommits = d3.sort(commits, (d) => -d.totalLines);
+
+const dots = svg.append('g').attr('class', 'dots');
+
 
   dots
     .selectAll('circle')
-    .data(commits)
+    .data(sortedCommits)
     .join('circle')
     .attr('cx', (d) => xScale(d.datetime))
     .attr('cy', (d) => yScale(d.hourFrac))
-    .attr('r', 5)
-      .attr('fill', 'steelblue')
+    .attr('r', (d) => rScale(d.totalLines))
+    .attr('fill-opacity', 0.7)
+    .attr('fill', 'steelblue')
     .on('mouseenter', (event, commit) => {
-      renderTooltipContent(commit);
-    })
-    .on('mouseleave', () => {
-      renderTooltipContent({});
-    });
+    d3.select(event.currentTarget).attr('fill-opacity', 1);
+
+  renderTooltipContent(commit);
+  updateTooltipVisibility(true);
+  updateTooltipPosition(event);
+})
+.on('mouseleave', (event) => {
+  d3.select(event.currentTarget).attr('fill-opacity', 0.7);
+
+  updateTooltipVisibility(false);
+});
+function isCommitSelected(selection, commit) {
+  if (!selection) {
+    return false;
+  }
+
+  const [[x0, y0], [x1, y1]] = selection;
+  const x = xScale(commit.datetime);
+  const y = yScale(commit.hourFrac);
+
+  return x >= x0 && x <= x1 && y >= y0 && y <= y1;
 }
+function renderLanguageBreakdown(selection) {
+  const selectedCommits = commits.filter((commit) =>
+    isCommitSelected(selection, commit)
+  );
+
+  const container = document.getElementById('language-breakdown');
+
+  if (selectedCommits.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+
+  const lines = selectedCommits.flatMap((commit) => commit.lines);
+
+  const breakdown = d3.rollup(
+    lines,
+    (v) => v.length,
+    (d) => d.type
+  );
+
+  container.innerHTML = '';
+
+  for (const [language, count] of breakdown) {
+    const proportion = count / lines.length;
+    const formatted = d3.format('.1~%')(proportion);
+
+    const label = document.createElement('dt');
+    label.textContent = language;
+    container.append(label);
+
+    const value = document.createElement('dd');
+    value.textContent = `${count} lines (${formatted})`;
+    container.append(value);
+  }
+}
+
+function renderSelectionCount(selection) {
+  const selectedCommits = commits.filter((commit) =>
+    isCommitSelected(selection, commit)
+  );
+
+  const count = document.getElementById('selection-count');
+
+  count.textContent = `${selectedCommits.length || 'No'} commits selected`;
+
+  return selectedCommits;
+}
+
+function brushed(event) {
+  const selection = event.selection;
+
+  svg.selectAll('circle').classed('selected', (commit) => {
+    return isCommitSelected(selection, commit);
+  });
+
+  renderSelectionCount(selection);
+  renderLanguageBreakdown(selection);
+}
+
+function createBrushSelector(svg) {
+  svg.call(
+    d3.brush().on('start brush end', brushed)
+  );
+
+  svg.selectAll('.dots, .overlay ~ *').raise();
+}
+createBrushSelector(svg);
+}
+
+  function updateTooltipVisibility(isVisible) {
+  const tooltip = document.getElementById('commit-tooltip');
+  tooltip.hidden = !isVisible;
+}
+
+function updateTooltipPosition(event) {
+  const tooltip = document.getElementById('commit-tooltip');
+
+  tooltip.style.left = `${event.clientX}px`;
+  tooltip.style.top = `${event.clientY}px`;
+}
+
+
+
+
+
+
 
 let data = await loadData();
 let commits = processCommits(data);
@@ -168,3 +284,4 @@ function renderTooltipContent(commit) {
   author.textContent = commit.author;
   lines.textContent = commit.totalLines;
 }
+

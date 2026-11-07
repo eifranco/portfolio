@@ -285,6 +285,12 @@ dl.info dd {
   position: fixed;
   top: 1em;
   left: 1em;
+  padding: 1em;
+  background-color: color-mix(in oklch, canvas, transparent 10%);
+  color: canvastext;
+  border-radius: 0.5em;
+  box-shadow: 0 0.2em 1em rgb(0 0 0 / 20%);
+  backdrop-filter: blur(10px);
 }
 
 circle {
@@ -295,4 +301,36 @@ circle {
 
 circle:hover {
   transform: scale(1.5);
+}
+
+dl.info {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5em 1em;
+  transition: opacity 500ms, visibility 500ms;
+}
+
+dl.info[hidden]:not(:hover, :focus-within) {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Brush styling */
+@keyframes marching-ants {
+  to {
+    stroke-dashoffset: -8;
+  }
+}
+
+.selection {
+  fill-opacity: 0.1;
+  stroke: black;
+  stroke-opacity: 0.7;
+  stroke-dasharray: 5 3;
+  animation: marching-ants 2s linear infinite;
+}
+
+/* Brushed circles */
+circle.selected {
+  fill: #ff6b6b;
 }
