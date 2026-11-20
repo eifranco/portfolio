@@ -1,5 +1,8 @@
 import * as d3 from 'https://cdn.jsdelivr.net/npm/d3@7.9.0/+esm';
 
+let xScale;
+let yScale;
+
 async function loadData() {
   const data = await d3.csv('loc.csv', (row) => ({
     ...row,
@@ -82,13 +85,13 @@ const svg = d3
     .attr('viewBox', `0 0 ${width} ${height}`)
     .style('overflow', 'visible');
 
-const xScale = d3
+xScale = d3
     .scaleTime()
     .domain(d3.extent(commits, (d) => d.datetime))
     .range([usableArea.left, usableArea.right])
     .nice();
 
-const yScale = d3
+yScale = d3
   .scaleLinear()
   .domain([0, 24])
   .range([usableArea.bottom, usableArea.top]);
@@ -113,12 +116,15 @@ const yAxis = d3
 svg
   .append('g')
   .attr('transform', `translate(0, ${usableArea.bottom})`)
+  .attr('class', 'x-axis')
   .call(xAxis);
 
 svg
   .append('g')
   .attr('transform', `translate(${usableArea.left}, 0)`)
+  .attr('class', 'y-axis')
   .call(yAxis);
+
   const [minLines, maxLines] = d3.extent(
   commits,
   (d) => d.totalLines
@@ -255,6 +261,19 @@ function updateTooltipPosition(event) {
 
 let data = await loadData();
 let commits = processCommits(data);
+let filteredCommits = commits;
+
+let commitProgress = 100;
+
+let timeScale = d3
+  .scaleTime()
+  .domain([
+    d3.min(commits, (d) => d.datetime),
+    d3.max(commits, (d) => d.datetime),
+  ])
+  .range([0, 100]);
+
+let commitMaxTime = timeScale.invert(commitProgress);
 
 renderCommitInfo(data, commits);
 renderScatterPlot(data, commits);
@@ -262,7 +281,7 @@ renderScatterPlot(data, commits);
 function renderTooltipContent(commit) {
   const link = document.getElementById('commit-link');
   const date = document.getElementById('commit-date');
-  const time = document.getElementById('commit-time');
+  const time = document.getElementById('tooltip-commit-time');
   const author = document.getElementById('commit-author');
   const lines = document.getElementById('commit-lines');
 
@@ -285,3 +304,72 @@ function renderTooltipContent(commit) {
   lines.textContent = commit.totalLines;
 }
 
+function onTimeSliderChange() {
+  const slider = document.getElementById('commit-progress');
+
+  commitProgress = Number(slider.value);
+  commitMaxTime = timeScale.invert(commitProgress);
+
+  document.getElementById('commit-time').textContent =
+    commitMaxTime.toLocaleString('en', {
+      dateStyle: 'long',
+      timeStyle: 'short',
+    });
+
+  filteredCommits = commits.filter(
+    (d) => d.datetime <= commitMaxTime
+  );
+
+  updateScatterPlot(data, filteredCommits);
+}
+
+document
+  .getElementById('commit-progress')
+  .addEventListener('input', onTimeSliderChange);
+
+onTimeSliderChange();
+
+function updateScatterPlot(data, commits) {
+  const svg = d3.select('#chart').select('svg');
+
+  xScale = xScale.domain(d3.extent(commits, (d) => d.datetime));
+
+  const [minLines, maxLines] = d3.extent(
+    commits,
+    (d) => d.totalLines
+  );
+
+  const rScale = d3
+    .scaleSqrt()
+    .domain([minLines, maxLines])
+    .range([5, 15]);
+
+  const xAxis = d3.axisBottom(xScale);
+
+  const xAxisGroup = svg.select('g.x-axis');
+  xAxisGroup.selectAll('*').remove();
+  xAxisGroup.call(xAxis);
+
+  const dots = svg.select('g.dots');
+  const sortedCommits = d3.sort(commits, (d) => -d.totalLines);
+
+  dots
+    .selectAll('circle')
+    .data(sortedCommits)
+    .join('circle')
+    .attr('cx', (d) => xScale(d.datetime))
+    .attr('cy', (d) => yScale(d.hourFrac))
+    .attr('r', (d) => rScale(d.totalLines))
+    .attr('fill', 'steelblue')
+    .style('fill-opacity', 0.7)
+    .on('mouseenter', (event, commit) => {
+      d3.select(event.currentTarget).style('fill-opacity', 1);
+      renderTooltipContent(commit);
+      updateTooltipVisibility(true);
+      updateTooltipPosition(event);
+    })
+    .on('mouseleave', (event) => {
+      d3.select(event.currentTarget).style('fill-opacity', 0.7);
+      updateTooltipVisibility(false);
+    });
+}
