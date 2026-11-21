@@ -2,6 +2,8 @@ import * as d3 from 'https://cdn.jsdelivr.net/npm/d3@7.9.0/+esm';
 
 let xScale;
 let yScale;
+let colors = d3.scaleOrdinal(d3.schemeTableau10);
+
 
 async function loadData() {
   const data = await d3.csv('loc.csv', (row) => ({
@@ -15,6 +17,7 @@ async function loadData() {
 
   return data;
 }
+
 
 function processCommits(data) {
   return d3.groups(data, (d) => d.commit).map(([commit, lines]) => {
@@ -142,7 +145,7 @@ const dots = svg.append('g').attr('class', 'dots');
 
   dots
     .selectAll('circle')
-    .data(sortedCommits)
+    .data(sortedCommits, (d) => d.id)
     .join('circle')
     .attr('cx', (d) => xScale(d.datetime))
     .attr('cy', (d) => yScale(d.hourFrac))
@@ -173,7 +176,7 @@ function isCommitSelected(selection, commit) {
   return x >= x0 && x <= x1 && y >= y0 && y <= y1;
 }
 function renderLanguageBreakdown(selection) {
-  const selectedCommits = commits.filter((commit) =>
+  const selectedCommits = filteredCommitsommits.filter((commit) =>
     isCommitSelected(selection, commit)
   );
 
@@ -209,7 +212,7 @@ function renderLanguageBreakdown(selection) {
 }
 
 function renderSelectionCount(selection) {
-  const selectedCommits = commits.filter((commit) =>
+  const selectedCommits = filteredCommitsommits.filter((commit) =>
     isCommitSelected(selection, commit)
   );
 
@@ -321,6 +324,8 @@ function onTimeSliderChange() {
   );
 
   updateScatterPlot(data, filteredCommits);
+  updateScatterPlot(data, filteredCommits);
+  updateFileDisplay(filteredCommits);
 }
 
 document
@@ -355,7 +360,7 @@ function updateScatterPlot(data, commits) {
 
   dots
     .selectAll('circle')
-    .data(sortedCommits)
+    .data(sortedCommits, (d) => d.id)
     .join('circle')
     .attr('cx', (d) => xScale(d.datetime))
     .attr('cy', (d) => yScale(d.hourFrac))
@@ -372,4 +377,44 @@ function updateScatterPlot(data, commits) {
       d3.select(event.currentTarget).style('fill-opacity', 0.7);
       updateTooltipVisibility(false);
     });
+}
+
+function updateFileDisplay(filteredCommits) {
+  let lines = filteredCommits.flatMap((d) => d.lines);
+
+  let files = d3
+    .groups(lines, (d) => d.file)
+    .map(([name, lines]) => {
+      return { name, lines };
+    })
+    .sort((a, b) => b.lines.length - a.lines.length);
+
+  let filesContainer = d3
+    .select('#files')
+    .selectAll('div')
+    .data(files, (d) => d.name)
+    .join(
+      (enter) =>
+        enter.append('div').call((div) => {
+          div.append('dt').append('code');
+          div.append('dd');
+        }),
+    );
+
+  filesContainer
+  .select('dt')
+  .html(
+    (d) => `
+      <code>${d.name}</code>
+      <small>${d.lines.length} lines</small>
+    `
+  );
+
+filesContainer
+  .select('dd')
+  .selectAll('div')
+  .data((d) => d.lines)
+  .join('div')
+  .attr('class', 'loc')
+  .attr('style', (d) => `--color: ${colors(d.type)}`);
 }
